@@ -1,8 +1,12 @@
 from flask import Flask, request, jsonify, render_template
 import requests
 import json
+import os
+import logging
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 STATUS_URL = "https://duckduckgo.com/duckchat/v1/status"
 CHAT_URL = "https://duckduckgo.com/duckchat/v1/chat"
@@ -40,6 +44,7 @@ class Chat:
         message = self.fetch(content)
         full_message = self.stream_events(message)
         self.old_vqd = self.new_vqd
+        self.new_vqd = message.headers.get("x-vqd-
         self.new_vqd = message.headers.get("x-vqd-4")
         self.messages.append({"content": full_message, "role": "assistant"})
         return full_message
@@ -72,17 +77,22 @@ def home():
 
 @app.route('/chat', methods=['POST'])
 def chat():
+    logging.info("Received chat request")
     data = request.json
     if not data or 'message' not in data:
+        logging.error("Invalid input")
         return jsonify({"error": "Invalid input"}), 400
 
     model = data.get('model', Model.GPT_4O_MINI)
     message = data['message']
 
-    chat_instance = init_chat(model)
-    response = chat_instance.fetch_full(message)
-
-    return jsonify({"response": response})
+    try:
+        chat_instance = init_chat(model)
+        response = chat_instance.fetch_full(message)
+        return jsonify({"response": response})
+    except Exception as e:
+        logging.error(f"Error during chat: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=5000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
