@@ -44,7 +44,6 @@ class Chat:
         message = self.fetch(content)
         full_message = self.stream_events(message)
         self.old_vqd = self.new_vqd
-        self.new_vqd = message.headers.get("x-vqd-
         self.new_vqd = message.headers.get("x-vqd-4")
         self.messages.append({"content": full_message, "role": "assistant"})
         return full_message
