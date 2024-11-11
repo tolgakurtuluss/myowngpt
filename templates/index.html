@@ -81,7 +81,7 @@
 
         <h3 class="mt-5">cURL Example</h3>
         <pre id="curl-example">
-curl -X POST http://127.0.0.1:5000/chat \
+curl -X POST https://myowngpt.onrender.com/chat \
 -H "Content-Type: application/json" \
 -d '{"model": "gpt-4o-mini", "message": "Hello, how are you?"}'
         </pre>
@@ -100,7 +100,7 @@ curl -X POST http://127.0.0.1:5000/chat \
                 $('#response').html(''); // Clear previous response
 
                 // Update cURL example
-                $('#curl-example').text(`curl -X POST http://127.0.0.1:5000/chat \\\n` +
+                $('#curl-example').text(`curl -X POST https://myowngpt.onrender.com/chat \\\n` +
                     `-H "Content-Type: application/json" \\\n` +
                     `-d '{"model": "${model}", "message": "${message}"}'`);
 
